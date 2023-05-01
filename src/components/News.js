@@ -28,58 +28,30 @@ export class News extends Component {
         }
     }
 
-    async componentDidMount() {
-        // fetch('https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=61d3210bd9214287a5d26cca956f220e')
-        // .then((response) => response.json())
-        // .then(articleList => {
-        //   console.log(articleList.articles);
-        //     this.setState({
-        //       article: articleList.articles,
-        //       laoding : false 
-        //     });
-        // });
-
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=61d3210bd9214287a5d26cca956f220e&page=1&pageSize=${this.props.pageSize}`;
-        this.setState({laoding:true});
-        let articleList = await fetch(url);
-        let partDate = await articleList.json();
-        this.setState({
-              article: partDate.articles,
-              laoding : false ,
-              totalResults : partDate.totalResults
-        });
-
-    }
-
-    handlePrevClick = async () => {
-        console.log('prev');
-
-        
-            let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=61d3210bd9214287a5d26cca956f220e&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
-            this.setState({laoding:true});
-            let articleList = await fetch(url);
-            let partDate = await articleList.json();
-            this.setState({
-                article: partDate.articles,
-                laoding : false ,
-                page : this.state.page - 1
-            });
-        
-
-        
-    }
-
-    handleNextClick = async () => {
-        console.log('next');
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=61d3210bd9214287a5d26cca956f220e&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+    async updateNews(){
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=61d3210bd9214287a5d26cca956f220e&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
         this.setState({laoding:true});
         let articleList = await fetch(url);
         let partDate = await articleList.json();
         this.setState({
             article: partDate.articles,
             laoding : false ,
-            page : this.state.page + 1
-        });        
+            page : this.state.page - 1
+        });
+    }
+
+    async componentDidMount() {
+        this.updateNews();
+    }
+
+    handlePrevClick = async () => {
+        this.setState({page : this.state.page - 1});
+        this.updateNews();
+    }
+
+    handleNextClick = async () => {
+        this.setState({page : this.state.page + 1});
+        this.updateNews();
     }
 
   render() {
